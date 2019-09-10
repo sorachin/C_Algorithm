@@ -1,0 +1,39 @@
+#include<stdio.h>
+#include<stdlib.h>
+int *parr;
+
+int main ()
+{
+	int n, maxLoc;
+	int temp;
+	scanf_s("%d", &n);
+	int *parr;
+	parr = (int*)malloc(n);
+
+	//숫자 n번 입력받기
+	for (int step = 0; step < n; step++)
+	{
+		scanf_s("%d", parr + step);
+	}
+	 
+	
+	for (int i = n-1; i >= 0; i--)
+	{
+		maxLoc = i;
+		for (int j = i-1; j >= 0; j--)
+		{
+			if (*(parr + j) > *(parr+maxLoc))
+			{
+				maxLoc = j;
+			}
+		}
+		temp = *(parr + i);
+		*(parr + i) = *(parr + maxLoc);
+		*(parr + maxLoc) = temp;
+	}
+	
+	for (int i = 0; i < n; i++)
+	{
+		printf(" %d", *(parr + i));
+	}
+}
