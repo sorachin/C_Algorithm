@@ -1,0 +1,193 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<time.h>
+#include<Windows.h>
+
+
+
+void selection_sort(int arr[], int n) {
+	
+	int maxLoc, temp;
+	
+	for (int i = n-1; i >= 0; i--)
+	{
+		maxLoc = i;
+		for (int j = i - 1; j >= 0; j--)
+		{
+			if (arr[i] < arr[j])
+			{
+				maxLoc = j;
+			}
+		}
+		temp = arr[i];
+		arr[i] = arr[maxLoc];
+		arr[maxLoc] = temp;
+	}
+	/*
+	for (int i = 0; i < n; i++)
+	{
+		printf("%d ", arr[i]);
+	}*/
+	
+}
+
+void insert_sort(int arr[], int n) {
+
+	int Loc, temp;
+	for (int i = 1; i < n; i++)
+	{
+		Loc = i;
+		for (int j = i - 1; j >= 0; j--)
+		{
+			if (arr[i] < arr[j])
+			{
+				Loc = j;
+			}
+		}
+		if (Loc != i)
+		{
+			temp = arr[i];
+			for (int step = i - 1; step >= Loc; step--)
+			{
+				arr[step + 1] = arr[step];
+			}
+			arr[Loc] = temp;
+		}
+	}
+	/*
+	for (int i = 0; i < n; i++)
+	{
+		//printf("%d ", arr[i]);
+		printf("%d ", arr[i]);
+	}
+	*/
+}
+
+void inverse_selec(int arr[], int n) {
+
+	int minLoc, temp;
+
+	for (int i = n - 1; i > 0; i--)
+	{
+		minLoc = i;
+		for (int j = i - 1; j >= 0; j--)
+		{
+			if (arr[j] < arr[i])
+			{
+				minLoc = j;
+			}
+		}
+		temp = arr[minLoc];
+		arr[minLoc] = arr[i];
+		arr[i] = temp;
+	}
+	/*
+	for (int i = 0; i < n; i++)
+	{
+		printf("%d ", arr[i]);
+	}
+	*/
+}
+
+int main(void)
+{
+	int n;
+	scanf_s("%d", &n);
+	
+	LARGE_INTEGER ticksPerSec;
+	LARGE_INTEGER start, end, diff;
+	LARGE_INTEGER start2, end2, diff2;
+	
+	srand(time(NULL));
+	int *A = (int *)malloc(sizeof(int) *n);
+	int *B = (int *)malloc(sizeof(int) *n);
+	int *C = (int *)malloc(sizeof(int) *n);
+	for (int i = 0; i < n; i++)
+	{
+		//A[i] = B[i] = rand();
+		C[i] = rand();
+	}
+
+
+	//역순정렬
+
+	inverse_selec(C, n);
+
+	
+	A[n] = B[n] = C[n];
+	//selection_sort(A, n);
+	//insert_sort(B, n);
+	
+	QueryPerformanceFrequency(&ticksPerSec);
+
+
+	QueryPerformanceCounter(&start);
+	selection_sort(A, n);
+	QueryPerformanceCounter(&end);
+	diff.QuadPart = end.QuadPart-start.QuadPart;
+
+	QueryPerformanceCounter(&start2);
+	insert_sort(B, n);
+	QueryPerformanceCounter(&end2);
+	diff2.QuadPart = end2.QuadPart - start2.QuadPart;
+	
+
+	printf("\n");
+	printf("time: %.12f sec\n\n", ((double)diff.QuadPart / (double)ticksPerSec.QuadPart));
+	printf("time: %.12f sec\n\n", ((double)diff2.QuadPart / (double)ticksPerSec.QuadPart));
+	//100000
+	
+	
+	free(A);
+	free(B);
+}
+
+/*
+
+A. unordered list
+A-a) insertion
+  time: 22.873977801036 sec
+  time: 14.583647592473 sec
+A-b) 
+ n= 10000
+  time: 0.259310055539 sec
+  time: 0.142828208887 sec
+ n= 20000
+  time: 0.924501212142 sec
+  time: 0.588713607455 sec
+ n=30000
+  time: 2.023885065460 sec
+  time: 1.298412700045 sec
+ n=40000
+  time: 3.649035940690 sec
+  time: 2.317290866882 sec
+
+B. ordered list
+B-a) selection
+ n= 10000
+  time: 0.112676809320 sec
+  time: 0.117623563472 sec
+B-b)
+ n= 20000
+  time: 0.445319423682 sec
+  time: 0.448637650644 sec
+ n=30000
+  time: 1.026558153020 sec
+  time: 1.031984520767 sec
+ n=100000
+  time: 11.531172313393 sec
+  time: 11.401929043919 sec
+
+ C. inversed list
+C-a) selection
+ n=100000
+  time: 16.632882266943 sec
+  time: 21.399487795299 sec
+C-b)
+ n=10000
+  time: 0.001359676269 sec
+  time: 0.001312383181 sec
+ n=50000
+  time: 2.896169568337 sec
+  time: 2.931326324361 sec
+*/
