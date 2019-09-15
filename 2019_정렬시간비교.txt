@@ -6,15 +6,15 @@
 
 
 void selection_sort(int arr[], int n) {
-	
+
 	int maxLoc, temp;
-	
-	for (int i = n-1; i >= 0; i--)
+
+	for (int i = n - 1; i >= 0; i--)
 	{
 		maxLoc = i;
 		for (int j = i - 1; j >= 0; j--)
 		{
-			if (arr[i] < arr[j])
+			if (arr[maxLoc] < arr[j])
 			{
 				maxLoc = j;
 			}
@@ -24,11 +24,13 @@ void selection_sort(int arr[], int n) {
 		arr[maxLoc] = temp;
 	}
 	/*
+	printf("선택: ");
 	for (int i = 0; i < n; i++)
 	{
 		printf("%d ", arr[i]);
-	}*/
-	
+	}
+	printf("\n");
+	*/
 }
 
 void insert_sort(int arr[], int n) {
@@ -43,6 +45,7 @@ void insert_sort(int arr[], int n) {
 			{
 				Loc = j;
 			}
+			else if (arr[i] > arr[j]) break;
 		}
 		if (Loc != i)
 		{
@@ -55,37 +58,13 @@ void insert_sort(int arr[], int n) {
 		}
 	}
 	/*
+	printf("삽입: ");
 	for (int i = 0; i < n; i++)
 	{
 		//printf("%d ", arr[i]);
 		printf("%d ", arr[i]);
 	}
-	*/
-}
-
-void inverse_selec(int arr[], int n) {
-
-	int minLoc, temp;
-
-	for (int i = n - 1; i > 0; i--)
-	{
-		minLoc = i;
-		for (int j = i - 1; j >= 0; j--)
-		{
-			if (arr[j] < arr[i])
-			{
-				minLoc = j;
-			}
-		}
-		temp = arr[minLoc];
-		arr[minLoc] = arr[i];
-		arr[i] = temp;
-	}
-	/*
-	for (int i = 0; i < n; i++)
-	{
-		printf("%d ", arr[i]);
-	}
+	printf("\n");
 	*/
 }
 
@@ -102,25 +81,30 @@ int main(void)
 	int *A = (int *)malloc(sizeof(int) *n);
 	int *B = (int *)malloc(sizeof(int) *n);
 	int *C = (int *)malloc(sizeof(int) *n);
-	for (int i = 0; i < n; i++)
-	{
-		//A[i] = B[i] = rand();
-		C[i] = rand();
-	}
-
-
-	//��������
-
-	inverse_selec(C, n);
-
 	
-	A[n] = B[n] = C[n];
-	//selection_sort(A, n);
-	//insert_sort(B, n);
+
+	//##### 무순서 #####
+	//for (int i = 0; i < n; i++) A[i] = B[i] = rand();
+	
+	//##### 정렬된 데이터 ##### 
+	/*
+	for (int i = 0; i < n; i++) C[i] = rand();
+	insert_sort(C, n);
+	for (int i = 0; i <= n-1; i++) A[i] = B[i] = C[i]; 
+	*/
+
+
+	//역순 데이터
+	/*
+	for (int i = 0; i < n; i++) C[i] = rand();
+	insert_sort(C, n);
+	for (int i = 0; i <= n - 1; i++) A[i] = B[i] = C[(n-1)-i];
+	*/
+	
+
+
 	
 	QueryPerformanceFrequency(&ticksPerSec);
-
-
 	QueryPerformanceCounter(&start);
 	selection_sort(A, n);
 	QueryPerformanceCounter(&end);
@@ -131,63 +115,35 @@ int main(void)
 	QueryPerformanceCounter(&end2);
 	diff2.QuadPart = end2.QuadPart - start2.QuadPart;
 	
+	printf("선택: %.12f sec\n\n", ((double)diff.QuadPart / (double)ticksPerSec.QuadPart));
+	printf("삽입: %.12f sec\n\n", ((double)diff2.QuadPart / (double)ticksPerSec.QuadPart));
 
-	printf("\n");
-	printf("time: %.12f sec\n\n", ((double)diff.QuadPart / (double)ticksPerSec.QuadPart));
-	printf("time: %.12f sec\n\n", ((double)diff2.QuadPart / (double)ticksPerSec.QuadPart));
-	//100000
-	
-	
 	free(A);
 	free(B);
 }
 
 /*
+########## 무순 ##########
+10000
+선택: 0.110048444571 sec
+삽입: 0.082679112288 sec
+100000
+선택: 10.861974095725 sec
+삽입: 8.449519255483 sec
 
-A. unordered list
-A-a) insertion
-  time: 22.873977801036 sec
-  time: 14.583647592473 sec
-A-b) 
- n= 10000
-  time: 0.259310055539 sec
-  time: 0.142828208887 sec
- n= 20000
-  time: 0.924501212142 sec
-  time: 0.588713607455 sec
- n=30000
-  time: 2.023885065460 sec
-  time: 1.298412700045 sec
- n=40000
-  time: 3.649035940690 sec
-  time: 2.317290866882 sec
+########## 정렬 ##########
+10000
+선택: 0.108779242036 sec
+삽입: 0.000070425576 sec
+100000
+선택: 10.879441694820 sec
+삽입: 0.001328318895 sec
 
-B. ordered list
-B-a) selection
- n= 10000
-  time: 0.112676809320 sec
-  time: 0.117623563472 sec
-B-b)
- n= 20000
-  time: 0.445319423682 sec
-  time: 0.448637650644 sec
- n=30000
-  time: 1.026558153020 sec
-  time: 1.031984520767 sec
- n=100000
-  time: 11.531172313393 sec
-  time: 11.401929043919 sec
-
- C. inversed list
-C-a) selection
- n=100000
-  time: 16.632882266943 sec
-  time: 21.399487795299 sec
-C-b)
- n=10000
-  time: 0.001359676269 sec
-  time: 0.001312383181 sec
- n=50000
-  time: 2.896169568337 sec
-  time: 2.931326324361 sec
+########## 역순 ##########
+10000
+선택: 0.126645233988 sec
+삽입: 0.166281467895 sec
+100000
+선택: 16.913598613284 sec
+삽입: 16.784317817774 sec
 */
