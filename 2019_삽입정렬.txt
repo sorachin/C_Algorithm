@@ -2,7 +2,7 @@
 #include<stdlib.h>
 
 //int *parr;
-void insert_sort(int *parr, int n) //n = ¹è¿­ÀÇ ¿ø¼Ò °³¼ö
+void insert_sort(int *parr, int n) //n = ë°°ì—´ì˜ ì›ì†Œ ê°œìˆ˜
 {
 	int minLoc, temp;
 	for (int step = 1; step < n; step++)
@@ -14,13 +14,18 @@ void insert_sort(int *parr, int n) //n = ¹è¿­ÀÇ ¿ø¼Ò °³¼ö
 			{
 				minLoc = i;
 			}
+			// ì‹œê°„ ë‹¨ì¶• ìë¦¬ë¥¼ ì°¾ìœ¼ë©´(ì•ë¶€ë¶„ì´ ì •ë ¬ë˜ìˆìœ¼ë¯€ë¡œ) 
+			else if(*(parr + step) > *(parr + i))
+			{
+				break;
+			}
 		}
 		if (minLoc != step)
 		{
 			temp = *(parr + step);
-			// ¿À·ù ºÎºĞ
-			// minLoc -> step ¼øÀ¸·Î Ä¿Áö±â ½ÃÀÛÇÏ¸é ¸ğµÎ °°Àº °ªÀ¸·Î ¹Ù²î¹Ç·Î 
-			// µÚ¿¡¼­ºÎÅÍ ¿Å°Ü¾ßÇÔ
+			// ì˜¤ë¥˜ ë¶€ë¶„
+			// minLoc -> step ìˆœìœ¼ë¡œ ì»¤ì§€ê¸° ì‹œì‘í•˜ë©´ ëª¨ë‘ ê°™ì€ ê°’ìœ¼ë¡œ ë°”ë€Œë¯€ë¡œ 
+			// ë’¤ì—ì„œë¶€í„° ì˜®ê²¨ì•¼í•¨
 			for (int j = step-1; j >= minLoc; j--)
 			{
 				*(parr + j + 1) = *(parr + j);
@@ -36,7 +41,7 @@ int main()
 	int *parr;
 	parr = (int*)malloc(n);
 
-	//¼ıÀÚ n¹ø ÀÔ·Â¹Ş±â
+	//ìˆ«ì në²ˆ ì…ë ¥ë°›ê¸°
 	for (int step = 0; step < n; step++)
 	{
 		scanf_s("%d", parr + step);
