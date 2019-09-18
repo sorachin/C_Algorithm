@@ -1,0 +1,70 @@
+#include<stdio.h>
+
+int H[100]; //크기 100미만 배열
+int n=0;	//힙의 크기
+
+void downHeap(int Parents)    // 힙 조정, i: 배열 인덱스
+{
+	int temp, bigger;
+	int LeftChild = 2 * Parents, RightChild = 2 * Parents + 1;
+
+	//탈출조건
+
+	//순차저장이므로 무조건 왼쪽부터 저장 -> 왼쪽 자식의 인덱스가 없으면
+	//										 마지막 노드!! return
+	if (n < LeftChild) return;
+	if (H[Parents] > H[LeftChild] && H[Parents] > H[RightChild]) return;
+
+	if (H[LeftChild] > H[RightChild])		bigger = LeftChild;
+	else if (H[LeftChild] < H[RightChild])  bigger = RightChild;
+
+	temp = H[Parents];
+	H[Parents] = H[bigger];
+	H[bigger] = temp;
+
+	downHeap(bigger);
+}
+
+void printHeap()
+{
+	if (n >= 1)
+	{
+		for (int i = 1; i <= n; i++)		printf(" %d", H[i]);
+		printf("\n");
+	}
+	else if (n < 1)
+	{
+		return;
+	}
+}
+
+void rBuildHeap(int i) // i: 부분 힙의 루트 인덱스, 재귀방식으로 상향식 힙 생성
+{
+	if (i > n) return;
+	rBuildHeap(2 * i);
+	rBuildHeap(2 * i + 1);
+	downHeap(i);
+	return;
+}
+
+void buildHeap()	   // 비재귀 방식으로 상향식 힙 생성
+{
+	for (int i = n / 2; i > 0; i--)
+	{
+		downHeap(i); 
+	}
+}
+
+int main()
+{
+	scanf_s("%d", &n);
+
+	for (int i = 1; i <= n; i++)
+	{
+		scanf_s("%d", &H[i]);
+	}
+
+	//buildHeap();
+	rBuildHeap(1);
+	printHeap();
+}

@@ -1,0 +1,151 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+int H[100];  // 배열 크기 100미만;
+int n = 0; //현재 키의 총 개수+1
+
+
+void upHeap(int Child)      // 힙 조정, i: 배열 인덱스
+{
+	int temp;
+	int Parents = Child / 2;
+
+	//탈출 조건
+	//더 이상 올라갈곳이 없을때
+	if (Child == 1)
+		return;
+	//부모보다 작은경우  
+	if (H[Child] < H[Parents])
+		return;
+
+	temp = H[Child];
+	H[Child] = H[Parents];
+	H[Parents] = temp;
+
+	//부모 인덱스로 잭 ㅟ
+	upHeap(Parents);
+}
+
+void insertItem(int key) // 힙 삽입
+{
+	n++;
+	if (n == 1)
+	{
+		H[n] = key;
+	}
+	else if (key > 0)
+	{
+		H[n] = key;
+		upHeap(n);
+	}
+	else
+	{
+		printf("Key Value Error");
+	}
+	printf("0\n");
+	return;
+}
+
+void downHeap(int Parents)    // 힙 조정, i: 배열 인덱스
+{
+	int temp, bigger;
+	int LeftChild = 2 * Parents , RightChild = 2 * Parents +1;
+
+	//탈출조건
+
+	//순차저장이므로 무조건 왼쪽부터 저장 -> 왼쪽 자식의 인덱스가 없으면
+	//										 마지막 노드!! return
+	if (n < LeftChild) return;
+	if (H[Parents] > H[LeftChild] && H[Parents] > H[RightChild]) return;
+
+	if (H[LeftChild] > H[RightChild])		bigger = LeftChild;
+	else if (H[LeftChild] < H[RightChild])  bigger = RightChild;
+
+	temp = H[Parents];
+	H[Parents] = H[bigger];
+	H[bigger] = temp;
+
+	downHeap(bigger);
+}
+
+void removeMax()         //루트 힙 삭제
+{
+	int last = H[n];
+	H[1] = last;
+
+	n--;
+	downHeap(1);
+}
+
+void printHeap()		
+{
+	if ( n >= 1)
+	{ 
+		for (int i = 1; i <= n; i++)		printf(" %d", H[i]);
+		printf("\n");
+	}
+	else if ( n < 1)
+	{
+		return;
+	}
+}
+
+
+
+
+int main()
+{
+	/*
+	char menual;
+	int  key = 0;
+	do
+	{
+		scanf_s("%c", &menual);
+		getchar();
+		switch (menual)
+		{
+		case 'i':
+			scanf_s("%d", &key);
+			getchar();
+			insertItem(key);
+		case 'd':
+			printf("%d\n", H[1]);
+			removeMax();
+		case 'p':
+			printHeap();
+		}
+	} while (menual != 'q' || 'Q');
+	*/
+
+	char order;
+	int number;
+	while (1)
+	{
+		scanf_s("%c", &order);
+		getchar();
+
+		if (order == 'i')
+		{
+			scanf_s("%d", &number);
+			getchar();
+			insertItem(number);
+		}
+
+		else if (order == 'd' && n > 1)
+		{
+			printf("%d\n", H[1]);
+			removeMax();
+
+		}
+		else if (order == 'p')
+		{
+				printHeap();
+		}
+
+		else if (order == 'q')
+		{
+			return 0;
+		}
+	}
+}
+
