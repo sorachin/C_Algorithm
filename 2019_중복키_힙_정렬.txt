@@ -1,0 +1,115 @@
+#include<stdio.h>
+
+int H[100];
+int num, n;
+
+void inPlaceHeapSort();
+void downHeap(int Parents);
+void printArray();
+void buildHeap();
+
+int main()
+{
+	scanf_s("%d", &n);
+	num = n;
+	for (int i = 1; i <= num; i++)
+	{
+		scanf_s("%d", &H[i]);
+		if (H[i] < 1) return 0;
+	}
+	inPlaceHeapSort();
+	printArray();
+}
+
+void inPlaceHeapSort()
+{
+	int temp;
+	buildHeap();
+	//printArray();
+	for (int j = 0; j < n; j++)
+	{
+		// 조건 추가 앞 원소 2개 남았을때
+		if (num <= 2)
+		{
+			//같을때 처리...
+			if (H[1] <= H[2]) return;
+			else if (H[1] > H[2])
+			{
+				temp = H[1];
+				H[1] = H[2];
+				H[2] = temp;
+			}
+		}
+		temp = H[num];
+		H[num] = H[1];
+		H[1] = temp;
+		//printArray();
+		num--;
+
+		downHeap(1);
+		//printf("n의 값 : %d일때, 정렬: ", num);
+		//printArray();
+
+	}
+
+}
+
+
+void downHeap(int Parents)
+{
+	int temp = 0, bigger;
+	int LC = 2 * Parents, RC = 2 * Parents + 1;
+
+
+	if (num == Parents) return;
+	if (num < LC) return;
+	if ((H[Parents] > H[LC]) && H[Parents] > (H[RC])) return;
+
+	// 3-1번 문제 조건 추가
+	// 오른쪽 자식 값이 존재해도, 카운트되지 않았으면 왼쪽이 값이 바뀌게
+	if (H[LC] > H[RC] || num < RC) bigger = LC;
+	else	bigger = RC;
+
+	temp = H[bigger];
+	H[bigger] = H[Parents];
+	H[Parents] = temp;
+
+	downHeap(bigger);
+}
+
+void buildHeap()	   // 비재귀 방식으로 상향식 힙 생성
+{
+	for (int i = num / 2; i > 0; i--)
+	{
+		downHeap(i);
+	}
+}
+
+void printArray()
+{
+	if (n >= 1)
+	{
+		for (int i = 1; i <= n; i++)
+		{
+			printf("%d ", H[i]);
+		}
+		printf("\n");
+	}
+	else return;
+}
+
+/*
+3
+209 400 77
+
+6
+24 17 33 50 60 70
+
+
+6
+5 15 10 20 30 25
+
+8
+5 15 10 20 30 25 31 29
+
+*/
