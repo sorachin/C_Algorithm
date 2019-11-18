@@ -1,0 +1,197 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+struct hashnode
+{
+	int empty;
+	int key;
+};
+typedef struct hashnode node;
+
+int M, N;
+
+int h(int x)
+{
+	if (x >= M)
+	{
+		x = x % M;
+		return h(x);
+	}
+	else return x;
+}
+
+void init(node parr[], int M)
+{
+	int i;
+	for (i = 0; i < M; i++)
+	{
+		parr[i].empty = 0;
+		parr[i].key = 0;
+	}
+}
+
+// 개방주소법 - 선형조사법 (충돌이 일어났을 경우 다음 셀로 이동)
+void insert(node parr[], int k)
+{
+	int i = 0;
+	int v = h(k);
+	//printf("v: %d\n", v);
+	if (parr[v].empty == 0)
+	{
+		parr[v].key = k;
+		parr[v].empty = 1;
+		printf("%d\n", v);
+		return;
+	}
+	else
+	{
+		i = v;
+		
+		while (1)
+		{
+			if (parr[i].empty == 0)
+			{
+				parr[i].key = k;
+				parr[i].empty = 1;
+				printf("%d\n", i);
+				return;
+			}
+			else
+			{
+				if (i == M - 1)
+				{
+					printf("C");
+					i = 0;
+					continue;
+				}
+				printf("C");
+				i++;
+			}
+ 
+		}
+	}
+}
+
+void search(node parr[], int k)
+{
+	int i = 0;
+	int v = h(k);
+	if (parr[v].key == k)
+	{
+		printf("%d %d\n", v, parr[v].key);
+		return;
+	}
+	else
+	{
+		if(v != M-1) i = v+1;
+		else i = 0;
+		while (1)
+		{
+			if (parr[i].key == k)
+			{
+				printf("%d %d\n", i, parr[i].key);
+				return;
+			}
+			else
+			{
+				if (i == M - 1)
+				{
+					i = 0;
+					continue;
+				}
+				if (i == v)
+				{
+					printf("-1\n");
+					return;
+				}
+				i++;
+			}
+
+		}
+	}
+}
+
+
+int main()
+{
+	int k=0;
+	char order;
+	node *parr;
+
+	scanf("%d %d", &M, &N); getchar();
+	parr = (node*)malloc(sizeof(node)*M);
+
+	if (parr != NULL)
+	{
+		init(parr, M);
+		while (1)
+		{
+			scanf("%c", &order, 1);
+			if (order == 'i')
+			{
+				scanf("%d", &k); getchar();
+				insert(parr, k);
+			}
+			else if (order == 's')
+			{
+				scanf("%d", &k); getchar();
+				search(parr, k);
+			}
+			else
+			{
+				free(parr);
+				return -1;
+			}
+		}
+	}
+
+}
+/*
+7 3
+s 17011111
+i 17011112
+s 17011112
+i 17012345
+i 17012687
+e
+
+
+13 10
+i 16110243
+i 17011111
+i 17012331
+i 17012354
+i 17013672
+i 16012342
+s 17012354
+i 15013986
+i 102067
+i 113478
+i 14012322
+s 16110243
+e
+
+
+13 9
+i 25
+i 13
+i  16
+i 15
+i 7
+i 28
+i 31
+i 20
+i 1
+i 38
+s 13
+s 1
+s 15
+s 16
+s 28
+s 31
+s 38
+s 7
+s 20
+s 25
+s 2
+*/

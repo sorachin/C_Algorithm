@@ -1,0 +1,200 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+struct hashnode
+{
+	int empty;
+	int key;
+};
+typedef struct hashnode node;
+
+int M, N, q;
+
+int h(int x)
+{
+	if (x >= M)
+	{
+		x = x % M;
+		return h(x);
+	}
+	else return x;
+}
+
+int hx(int x)
+{
+	if (x >= q)
+	{
+		x = x % q;
+		return hx(x);
+	}
+	else return q - x;
+}
+
+void init(node parr[], int M)
+{
+	int i;
+	for (i = 0; i < M; i++)
+	{
+		parr[i].empty = 0;
+		parr[i].key = 0;
+	}
+}
+/*
+void insert(node parr[], int k)
+{
+	int i = 0;
+	int v = h(k);
+	if (parr[v].empty == 0)
+	{
+		parr[v].key = k;
+		parr[v].empty = 1;
+		printf("%d\n", v);
+		return;
+	}
+	else
+	{
+		i = v + hx(k);
+		
+		while (1)
+		{	
+			printf("C");
+			if (parr[i].empty == 0)
+			{
+				parr[i].key = k;
+				parr[i].empty = 1;
+				printf("%d\n", i);
+				return;
+			}
+			else
+			{
+				i += hx(k);
+				if (i > M - 1)
+				{
+					i = h(i);
+					continue;
+				}
+				else continue;
+			}
+		}
+	}
+}*/
+
+void insert(node parr[], int k)
+{
+	int v = h(k);
+	int i = 0;
+	while (i < M)
+	{
+		if (parr[v].empty == 0)
+		{
+			parr[v].key = k;
+			parr[v].empty = 1;
+			printf("%d\n", v);
+			return;
+		}
+		else
+		{
+			v += hx(k);
+			if (v >= M) v = h(v);
+			printf("C");
+		}
+		i++;
+	}
+}
+
+void search(node parr[], int k)
+{
+	int i = 0;
+	int v = h(k);
+	
+	while (i < M)
+	{
+		if (parr[v].key == 0)
+		{
+			printf("-1\n");
+			return;
+		}
+		else if (parr[v].key == k)
+		{
+			printf("%d %d\n", v, k);
+			return;
+		}
+		else
+		{
+			v += hx(k);
+			if (v >= M) v = h(v);
+		}
+		i++;
+	}
+}
+
+void print(node parr[])
+{
+	int i = 0; 
+	for (i; i < M; i++)
+	{
+		printf(" %d", parr[i].key);
+	}
+	printf("\n");
+
+	return;
+}
+
+int main()
+{
+	int k=0;
+	char order;
+	node *parr;
+
+	scanf("%d %d %d", &M, &N, &q); getchar();
+	parr = (node*)malloc(sizeof(node)*M);
+
+	if (parr != NULL)
+	{
+		init(parr, M);
+		while (1)
+		{
+			scanf("%c", &order, 1);
+			if (order == 'i')
+			{
+				scanf("%d", &k); getchar();
+				insert(parr, k);
+			}
+			else if (order == 's')
+			{
+				scanf("%d", &k); getchar();
+				search(parr, k);
+			}
+			else if (order == 'p')
+			{
+				getchar();
+				print(parr);
+			}
+			else
+			{
+				print(parr);
+				free(parr);
+				return -1;
+			}
+		}
+	}
+	return 0;
+}
+
+/*
+13 10 11
+i 25
+i 13
+i 16
+i 15
+i 70
+p
+i 28
+i 31
+i 20
+i 14
+s 20
+s 27
+i 38
+e
+*/

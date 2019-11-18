@@ -1,0 +1,268 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+struct hashnode
+{
+	int key;
+	struct hashnode* daum;
+};
+typedef struct hashnode node;
+
+int M;
+
+void init(node *parr)
+{
+	int i;
+	for (i = 0; i < M; i++)
+	{
+		parr[i].daum = NULL;
+		parr[i].key = -1;
+	}
+}
+
+int h(int x)
+{
+	if (x >= M)
+	{
+		x = x % M;
+		return h(x);
+	}
+	else return x;
+}
+
+void print(node *parr)
+{
+	int i;
+	node *temp;
+	for (i = 0; i < M; i++)
+	{
+		if (parr[i].key != -1)
+		{
+			printf(" %d", parr[i].key);
+			temp = parr[i].daum;
+			while (temp != NULL)
+			{
+				printf(" %d", temp->key);
+				if (temp->daum != NULL) temp = temp->daum;
+				else break;
+			}
+		}
+		else continue;
+	}
+	printf("\n");
+	return;
+}
+
+
+void insert(node parr[], int k)
+{
+	int v = h(k);
+
+
+	if (parr[v].key == -1)
+	{
+		parr[v].key = k;
+		return;
+	}
+	else
+	{
+		node *new = (node*)malloc(sizeof(node));
+		new->key = parr[v].key;
+		parr[v].key = k;
+
+		new->daum = parr[v].daum;
+		parr[v].daum = new;
+		return;
+	}
+}
+
+int search(node parr[], int k)
+{
+	int cnt = 0;
+	int v = h(k);
+	node *temp;
+	
+	if (parr[v].key == k)
+	{
+		cnt++;
+		return cnt;
+	}
+	else if (parr[v].daum == NULL) return cnt;
+	else
+	{
+		cnt++;
+		temp = parr[v].daum;
+		while (1)
+		{
+			if (temp->key == k)
+			{
+				cnt++;
+				return cnt;
+			}
+			else if (temp->daum == NULL) return 0;
+			else
+			{
+				cnt++;
+				temp = temp->daum;
+			}
+		}
+	}
+	return 0;
+}
+
+int delete(node parr[], int k)
+{
+	int v = h(k), cnt=0;
+	node *temp, *px;
+
+	px = parr + v;
+	temp = px->daum;
+
+	if (px->key == k)
+	{
+		cnt++;
+		if (temp == NULL)
+		{
+			px->key = -1;
+			return cnt;
+		}
+		else
+		{
+			px->key = temp->key;
+			px->daum = temp->daum;
+			free(temp);
+			return cnt;
+		}
+	}
+	else if (temp == NULL) return 0;
+	else
+	{	
+		while (1)
+		{ 
+			if (temp->daum != NULL)
+			{
+				cnt++;
+				px = temp;
+				temp = px->daum;
+			}
+			else
+			{
+				if (px->key == k)
+				{
+					cnt++;
+					px->key = temp->key;
+					px->daum = NULL;
+					free(temp);
+					return cnt;
+				}
+				else if (temp->key == k)
+				{	
+					cnt+=2;
+					//printf("test\n");
+					px->daum = NULL;
+					free(temp);
+					return cnt;
+				}
+				else return 0;
+			}
+
+			if (px->key == k)
+			{
+				cnt++;
+				px->key = temp->key;
+				px->daum = temp->daum;
+				free(temp);
+				return cnt;
+			}
+			
+		}
+	}
+}
+
+
+int main()
+{	
+	int  k;
+	char order;
+	node *parr;
+
+
+	scanf("%d", &M); getchar();
+	parr = (node*)malloc(sizeof(node)*M);
+	if (parr != NULL)
+	{
+		init(parr);
+		while (1)
+		{
+			scanf("%c", &order, 1);
+
+			if (order == 'i')
+			{
+				scanf("%d", &k); getchar();
+				insert(parr, k);
+			}
+			else if (order == 's')
+			{
+				scanf("%d", &k); getchar();
+				printf("%d\n", search(parr, k));
+			}
+			else if (order == 'p')
+			{
+				getchar();
+				print(parr);
+				continue;
+			}
+			else if (order == 'd')
+			{
+				scanf("%d", &k); getchar();
+				printf("%d\n", delete(parr, k));
+			}
+			else
+			{
+				/*for (i = 0; i < M; i++)
+				{
+					temp = parr[i].daum;
+					while (1)
+					{
+						if (temp->daum == NULL) break;
+						else
+						{
+							temp2 = temp->daum;
+							free(temp);
+							temp = temp2;
+						}
+					}
+					free(parr+i);
+				}*/
+
+				return -1;
+			}
+		}
+	}
+	else return -1;
+}
+/*
+13
+i 34
+i 23
+i 26
+i 21
+s 36
+s 26
+s 34
+s 21
+p
+d 21
+s 34
+d 8
+e
+
+
+3
+i 3
+i 6
+i 9
+i 2
+i 5
+i 1
+*/
