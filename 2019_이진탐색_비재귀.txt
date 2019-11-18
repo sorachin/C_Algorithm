@@ -1,0 +1,52 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+int main()
+{
+	int  *parr, N, K;
+	scanf_s("%d %d", &N, &K);
+
+	int mid, left = 0, right = N - 1;
+	parr = (int*)malloc(sizeof(int)*N);
+	for (int step = 0; step < N; step++) scanf_s("%d", &parr[step]);
+
+	if (K <= parr[N - 1] && K>=parr[0])
+	{
+		while (1)
+		{
+			if (parr[left] > K)
+			{
+				mid = left;
+				break;
+			}
+			else if(right==left)
+			{
+				if (parr[left] < K) mid = right+1;
+				else if (parr[left] >= K) mid = right;
+				break;
+			}
+			mid = (left + right) / 2;
+
+			if (K < parr[mid])	right = mid - 1;
+			else if (K > parr[mid]) left = mid + 1;
+			else break;
+		}
+	}
+	else if(K>parr[N-1]) mid = N;
+	else mid = 0;
+
+	printf(" %d", mid);
+}
+/*
+8 -92
+-92 -31 -7 4 14 20 29 44
+8 30
+-92 -31 -7 4 14 20 29 44
+
+3 51
+9 57 88
+8 21
+-92 -31 -7 4 14 20 29 44
+6 8
+-5 -2 0 6 9 10
+*/

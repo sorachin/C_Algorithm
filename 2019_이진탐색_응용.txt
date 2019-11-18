@@ -1,0 +1,45 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+char *arr;
+int  count=0, N;
+int solve(int left, int right)
+{
+	int mid = (left + right) / 2;
+	if (left == right) return mid;
+
+	if (arr[count] == 'N')
+	{
+		count++;
+		solve(left, mid);
+	}
+	else if (arr[count] == 'Y')
+	{
+		count++;
+		solve(mid + 1, right);
+	}	
+}
+
+int main()
+{
+	int result;
+	int A, B;
+
+	scanf_s("%d %d %d", &A, &B, &N);
+	getchar();
+	arr = (char*)malloc(sizeof(char)*N);
+	for (int step = 0; step < N; step++) scanf_s("%c", &arr[step],1);
+	
+	result = solve(A, B);
+	printf("%d\n", result);
+
+	free(arr);
+}
+
+/*
+10 20 3
+NNY
+
+1 1000 10
+NYYNYNYYNY
+*/
