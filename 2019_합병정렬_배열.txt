@@ -1,0 +1,74 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+int final_array[10]; 
+
+void merge(int list[], int left, int mid, int right) {
+	int i = left, j = mid + 1, k = left;
+	int l;
+
+	while (i <= mid && j <= right) {
+		if (list[i] <= list[j])
+			final_array[k++] = list[i++];
+		else
+			final_array[k++] = list[j++];
+	}
+
+	if (i > mid) {
+		for (l = j; l <= right; l++)
+			final_array[k++] = list[l];
+	}
+	else {
+		for (l = i; l <= mid; l++)
+			final_array[k++] = list[l];
+	}
+
+	for (l = left; l <= right; l++) {
+		list[l] = final_array[l];
+	}
+}
+
+void merge_sort(int list[], int left, int right) {
+	int mid;
+
+	if (left < right) {
+		mid = (left + right) / 2; 
+		merge_sort(list, left, mid); 
+		merge_sort(list, mid + 1, right);
+		merge(list, left, mid, right);
+	}
+}
+
+void main() {
+	int i;
+	int N=0, temp=0;
+
+
+	scanf_s("%d", &N);
+
+	int *arr = malloc(sizeof(int)*N);
+	for (int step = 0; step < N; step++)
+	{
+		scanf_s("%d", &temp);
+		arr[step] = temp;
+	}
+
+	merge_sort(arr, 0, N - 1);
+
+	for (i = 0; i < N; i++) {
+		printf(" %d", arr[i]);
+	}
+}
+/*
+8
+73 65 48 31 29 20 8 3
+
+3
+4 9 1
+
+4
+20 5 10 15
+
+7
+1 3 2 6 8 7 4
+*/
